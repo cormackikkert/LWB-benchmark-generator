@@ -1,5 +1,7 @@
 # The following script has been modified to use the python3 lwb-generator
-# instead of the lwb executable. Everything else is unchanged - Cormac 
+# instead of the lwb executable. Changes were also made so that each class
+# has 56 problems (previously some classes had more).
+# Everything else is unchanged - Cormac 
 
 ################################################################################
 #
@@ -40,11 +42,10 @@
 
     python3 generate.py s4_grz_n 10 90 10
     python3 generate.py s4_grz_n 100 4000 100
-    python3 generate.py s4_grz_n 4500 8000 500
+    python3 generate.py s4_grz_n 4500 7500 500
     python3 generate.py s4_grz_p 10 90 10
     python3 generate.py s4_grz_p 100 4000 100
-    python3 generate.py s4_grz_p 150 3000 500
-    python3 generate.py s4_grz_p 120 4000 100
+    python3 generate.py s4_grz_p 4500 7500 500
 
   # ---------------------------------
 
@@ -129,11 +130,10 @@
 
     python3 generate.py kt_grz_n 10 90 10
     python3 generate.py kt_grz_n 100 4000 100
-    python3 generate.py kt_grz_n 4500 8000 500
+    python3 generate.py kt_grz_n 4500 7500 500
     python3 generate.py kt_grz_p 10 90 10
     python3 generate.py kt_grz_p 100 4000 100
-    python3 generate.py kt_grz_p 150 3000 500
-    python3 generate.py kt_grz_p 120 4000 100
+    python3 generate.py kt_grz_p 4500 7500 500
 
   # ---------------------------------
 
@@ -207,10 +207,10 @@
 
     python3 generate.py k_grz_n 10 90 10
     python3 generate.py k_grz_n 100 4000 100
-    python3 generate.py k_grz_n 4500 8000 500
+    python3 generate.py k_grz_n 4500 7500 500
     python3 generate.py k_grz_p 10 90 10
     python3 generate.py k_grz_p 100 4000 100
-    python3 generate.py k_grz_p 4500 8000 500
+    python3 generate.py k_grz_p 4500 7500 500
 
   # ---------------------------------
 
