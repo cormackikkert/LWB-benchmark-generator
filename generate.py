@@ -72,7 +72,7 @@ for i in range(start, end+1, step):
 
     fileVar=  open(rf"{target_dir}/{base}.{str(i).rjust(4, '0')}.intohylo", "w")
     fileVar.write("begin\n~(")
-    eval(f"{base}_f({i})").write(fileVar)
+    fileVar.write(str(eval(f"{base}({i})")))
     fileVar.write(")\nend\n")
 
 
