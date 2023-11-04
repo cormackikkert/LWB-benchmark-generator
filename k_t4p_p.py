@@ -1,7 +1,7 @@
 from defs import *
 
 def k_t4p_p(n):
-    return str(E(n) |OR| nnf(Not(C(n))) |OR| Dia(p(4)))[1:-1]
+    return E(n) |OR| nnf(Not(C(n))) |OR| Dia(p(4))
 
 @memoized
 def C(i):

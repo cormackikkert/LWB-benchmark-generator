@@ -1,5 +1,9 @@
 import sys
-sys.setrecursionlimit(1000001)
+import random
+sys.setrecursionlimit(2000001)
+
+EXACT = False # If we mimic LWB output exactly
+_LOGIC = "K"
 
 class Formula:
     pass
@@ -28,7 +32,15 @@ class Lit(Formula):
         self.num = num
 
     def __str__(self):
-        return f"p{self.num}"
+        if _LOGIC == 'K':
+            return f"p{self.num}"
+        elif 'KnUnsat' in _LOGIC:
+            mod = random.randint(1, 10)
+            return f"p{self.num} | (<r{mod}> p{self.num} & [r{mod}] ~p{self.num})"
+        elif 'KnSat' in _LOGIC:
+            mod = random.randint(1, 10)
+            return f"p{self.num} & (<r{mod}> p{self.num} & [r{mod+10}] ~p{self.num})"
+
 
     def write(self, file):
         file.write(f"p{self.num}")
@@ -41,6 +53,7 @@ class Not(Formula):
         return f"(~{self.a1})"
 
     def write(self, file):
+        print("WRITING", type(self.a1))
         file.write("~(")
         self.a1.write(file)
         file.write(")")
@@ -66,6 +79,8 @@ class Or(Formula):
         self.a2 = a2
 
     def __str__(self):
+        if not EXACT:
+            return f"({self.a1.__str__()} | {self.a2.__str__()})"
         return f"({self.a1.__str__()} v {self.a2.__str__()})"
 
     def write(self, file):
@@ -110,6 +125,8 @@ class Box(Formula):
         self.a1 = a1
 
     def __str__(self):
+        if not EXACT:
+            return f"([r1] {self.a1})"
         if isinstance(self.a1, Lit) or isinstance(self.a1, TRUE_) or isinstance(self.a1, FALSE_):
             return f"(box {self.a1})"
         else:
@@ -128,6 +145,8 @@ class Dia(Formula):
         self.a1 = a1
 
     def __str__(self):
+        if not EXACT:
+            return f"(<r1> {self.a1})"
         if isinstance(self.a1, Lit) or isinstance(self.a1, TRUE_) or isinstance(self.a1, FALSE_):
             return f"(dia {self.a1})"
         else:
@@ -277,6 +296,20 @@ def size(f):
     if isinstance(f, Dia): return 1 + size(f.a1)
     if isinstance(f, Not):return 1 + size(f.a1)
     assert "Missing case in size"
+
+def depth(f):
+    if isinstance(f, Lit): return 0
+    if isinstance(f, TRUE_): return 0
+    if isinstance(f, FALSE_): return 0
+    if isinstance(f, And): return max(depth(f.a1), depth(f.a2))
+    if isinstance(f, Or): return max(depth(f.a1), depth(f.a2))
+    if isinstance(f, Implies): return max(depth(f.a1), depth(f.a2))
+    if isinstance(f, Box): return 1 + depth(f.a1)
+    if isinstance(f, Dia): return 1 + depth(f.a1)
+    if isinstance(f, Not): return depth(f.a1)
+    if isinstance(f, Iff): return max(depth(f.a1), depth(f.a2)
+)
+    assert "Missing case in depth", f
 
 import collections
 import functools

@@ -1,3 +1,4 @@
+import defs
 from k_branch_n import k_branch_n
 from k_branch_p import k_branch_p
 from k_d4_n import k_d4_n
@@ -54,25 +55,43 @@ from s4_s5_n import s4_s5_n, s4_s5_n_f
 from s4_s5_p import s4_s5_p, s4_s5_p_f
 from s4_t4p_n import s4_t4p_n, s4_t4p_n_f
 from s4_t4p_p import s4_t4p_p, s4_t4p_p_f
-target_dir = r"/home/users/u6427001/Provers/lwbS4"
+target_dir = r"./temp_target/"
 
 import sys
-if len(sys.argv[1:]) != 4:
+
+try:
+    if len(sys.argv[1:]) == 4:
+        base, *nums = sys.argv[1:]
+        start, end, step = map(int, nums)
+    elif len(sys.argv[1:]) == 5:
+        base, *nums, logic = sys.argv[1:]
+        start, end, step = map(int, nums)
+        defs._LOGIC = logic
+    else:
+        raise ValueError()
+
+
+    import os
+    for i in range(start, end+1, step):
+        if os.path.isfile(rf"{target_dir}/{base}.{str(i).rjust(4, '0')}.intohylo") and (len(open(rf"{target_dir}/{base}.{str(i).rjust(4, '0')}.intohylo").readlines()) == 3): continue
+        print("DOING", rf"{target_dir}/{base}.{str(i).rjust(4, '0')}.intohylo")
+
+        fileVar=  open(rf"{target_dir}/{base}.{str(i).rjust(4, '0')}.intohylo", "w")
+        if (defs._LOGIC == "KnUnsatGlobal"):
+            f = eval(f"{base}({i})")
+            d = defs.depth(f)
+            fileVar.write("begin\n")
+            fileVar.write(f"~({f}) | ({defs.Dia(defs.TRUE) |defs.AND| defs.mbox(2*d, defs.FALSE)})")
+            fileVar.write("\nend\n")
+        else:
+            fileVar.write("begin\n~(")
+            fileVar.write(str(eval(f"{base}({i})")))
+            fileVar.write(")\nend\n")
+
+except ValueError as e:
+    print(e)
+    print("Error: Misuse")
     print("Usage  : python generate.py <benchmark_class> <start_index> <end_index> <step>")
     print("Example: python generate.py k_branch_p 30 88 2")
     exit()
-
-base, *nums = sys.argv[1:]
-start, end, step = map(int, nums)
-
-import os
-for i in range(start, end+1, step):
-    if os.path.isfile(rf"{target_dir}/{base}.{str(i).rjust(4, '0')}.intohylo") and (len(open(rf"{target_dir}/{base}.{str(i).rjust(4, '0')}.intohylo").readlines()) == 3): continue
-    print("DOING", rf"{target_dir}/{base}.{str(i).rjust(4, '0')}.intohylo")
-
-    fileVar=  open(rf"{target_dir}/{base}.{str(i).rjust(4, '0')}.intohylo", "w")
-    fileVar.write("begin\n~(")
-    fileVar.write(str(eval(f"{base}({i})")))
-    fileVar.write(")\nend\n")
-
 

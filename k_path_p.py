@@ -55,4 +55,4 @@ def k_path_p(n):
     d3 = []
     for i in [2, 4, path_el(n, n), 6]:
         d3.append(mdia(n, Not(p(i))))
-    return str(list2disj(d1) |OR| list2disj(d2) |OR| list2disj(d3))[1:-1]
+    return list2disj(d1) |OR| list2disj(d2) |OR| list2disj(d3)

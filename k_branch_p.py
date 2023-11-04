@@ -33,4 +33,4 @@ def k_branch_p(n):
     for i in range(0, n+1):
         l.append(mbox(i, b))
     res = Or(Not(And(And(p(100), Not(p(101))), list2conj(l))), Not(mbox(n, p(n // 3 + 1))))
-    return str(res)[1:-1]
+    return res
